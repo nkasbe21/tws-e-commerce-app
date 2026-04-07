@@ -28,16 +28,15 @@ pipeline {
                 }
             }
         }
-        stage('Docker Login') {
+      stage('Docker Login') {
     steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+        withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
             bat '''
             echo %PASS% | docker login -u %USER% --password-stdin
             '''
         }
     }
 }
-
         
         stage('Build Docker Images') {
             parallel {
@@ -96,7 +95,7 @@ pipeline {
                             docker_push(
                                 imageName: env.DOCKER_IMAGE_NAME,
                                 imageTag: env.DOCKER_IMAGE_TAG,
-                                credentials: 'docker-hub-credentials'
+                                credentials: 'docker-cred'
                             )
                         }
                     }
@@ -108,7 +107,7 @@ pipeline {
                             docker_push(
                                 imageName: env.DOCKER_MIGRATION_IMAGE_NAME,
                                 imageTag: env.DOCKER_IMAGE_TAG,
-                                credentials: 'docker-hub-credentials'
+                                credentials: 'docker-cred'
                             )
                         }
                     }
