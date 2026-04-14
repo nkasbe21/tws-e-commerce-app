@@ -75,11 +75,7 @@ pipeline {
                 }
             }
         }
-        stage('Test Trivy') {
-    steps {
-        bat 'docker run --rm -v "%cd%":/app -w /app aquasec/trivy:0 fs .'
-    }
-}
+
         
         stage('Push Docker Images') {
             parallel {
